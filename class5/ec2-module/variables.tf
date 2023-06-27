@@ -1,0 +1,4 @@
+variable "webtype" {
+  type = string
+
+}
