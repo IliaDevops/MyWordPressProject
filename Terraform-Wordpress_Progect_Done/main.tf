@@ -182,26 +182,28 @@ resource "aws_security_group" "wordpress_sg" {
 
 
 
-#resource "aws_key_pair" "TF_key" {
-#  key_name   = "TF_key"
-#  public_key = tls_private_key.rsa.public_key_openssh
+resource "aws_key_pair" "TF_key" {
+  key_name   = "tf_key"
+  public_key = tls_private_key.rsa.public_key_openssh
 
-##resource "tls_private_key" "rsa" {
-#  algorithm = "RSA"
-#  rsa_bits  = 4096
-#}
+}
+resource "tls_private_key" "rsa" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
 
-#resource "local_file" "TF_key" {
-#  content  = tls_private_key.rsa.private_key_pem
-#  filename = "TF_key"
-#}
+resource "local_file" "TF_key" {
+  content  = tls_private_key.rsa.private_key_pem
+  filename = "tf_key"
+}
+
 
 
 # Create EC2 Instance
 resource "aws_instance" "wordpress_ec2" {
   ami                    = var.ami_id
   instance_type          = "t2.micro"
-  key_name               = "linuxkey"
+  key_name               = "tf_key"
   subnet_id              = aws_subnet.public_subnet_1.id
   vpc_security_group_ids = [aws_security_group.wordpress_sg.id]
   tags = {
